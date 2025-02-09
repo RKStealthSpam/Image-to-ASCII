@@ -40,7 +40,7 @@ window = pygame.display.set_mode((500, 500))
 pygame.display.set_caption('Image to ASCII')
 
 ## Image Processing
-SCALE_FACTOR = 0.2
+SCALE_FACTOR = 1
 pygame_image = pygame.image.load(IMAGE_PATH).convert()                  # Loads image into a new surface
 pygame_image = pygame.transform.scale_by(pygame_image, SCALE_FACTOR)    # Scales the surface
 #pygame_image_grayscale = pygame.transform.grayscale(pygame_image)      # Converts surface to grayscale
@@ -79,22 +79,41 @@ def get_surface_composition(gsc_surface):
     return gsc_surface_list
 
 # Creates a chart of input data
-def make_chart(mc_data, mc_mode, mc_size):
+def make_chart(mc_data, mc_mode, mc_size, mc_padding=20, mc_axis_ease=5):
     if not isinstance(mc_data, np.ndarray):
         raise TypeError
-    
-    mc_padding = 10
 
-    mc_surface = pygame.Surface((len(mc_data) + (mc_padding * 2), np.max(mc_data) + (mc_padding * 2)))
+    # Make sure the axis ease distance is within desired parameters
+    if mc_axis_ease > mc_padding:
+        mc_axis_ease = mc_padding
+    elif mc_axis_ease < 0:
+        mc_axis_ease = 0
+
+    mc_padding += 10
+    mc_surface = pygame.Surface(mc_size)
+    mc_size = (mc_size[0] - (mc_padding * 2), mc_size[1] - (mc_padding * 2))        # Adjusts window size for padding
 
     if mc_mode == 'line':
         for mc_x in range(0, len(mc_data) - 1):
-            pygame.draw.line(mc_surface,
-                               (255, 255, 255),
-                               (mc_padding + mc_x, mc_surface.get_height() - (mc_padding + mc_data[mc_x])),
-                               (mc_padding + mc_x + 1, mc_surface.get_height() - (mc_padding + mc_data[mc_x + 1])))
+            mc_start_pos = (mc_padding + (mc_x * (mc_size[0] / len(mc_data))),
+                            mc_size[1] + mc_padding - (mc_data[mc_x] * (mc_size[1] / np.max(mc_data))))
 
-    mc_surface = pygame.transform.scale(mc_surface, mc_size)
+            mc_end_pos = (mc_padding + ((mc_x + 1) * (mc_size[0] / len(mc_data))),
+                            mc_size[1] + mc_padding - (mc_data[mc_x + 1] * (mc_size[1] / np.max(mc_data))))
+
+            pygame.draw.line(mc_surface,(255, 255, 255), mc_start_pos,mc_end_pos)
+
+    # Y Axis
+    pygame.draw.line(mc_surface,
+                     (0, 255, 0),
+                     (mc_padding - mc_axis_ease, mc_padding),
+                     (mc_padding -  mc_axis_ease, mc_surface.get_height() - mc_padding + mc_axis_ease))
+    # X axis
+    pygame.draw.line(mc_surface,
+                     (255, 0, 0),
+                     (mc_padding - mc_axis_ease, mc_surface.get_height() - mc_padding + mc_axis_ease),
+                     (mc_surface.get_width() - mc_padding, mc_surface.get_height() - mc_padding + mc_axis_ease))
+
     return mc_surface
 
 window.blit(make_chart(get_surface_composition(pygame_image),'line', pygame_image.get_size()), (0, 0))
