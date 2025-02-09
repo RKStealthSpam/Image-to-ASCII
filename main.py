@@ -114,6 +114,7 @@ def make_chart(mc_data, mc_mode, mc_size, mc_padding=20, mc_axis_ease=5):
                      (mc_padding - mc_axis_ease, mc_surface.get_height() - mc_padding + mc_axis_ease),
                      (mc_surface.get_width() - mc_padding, mc_surface.get_height() - mc_padding + mc_axis_ease))
 
+
     return mc_surface
 
 window.blit(make_chart(get_surface_composition(pygame_image),'line', pygame_image.get_size()), (0, 0))
