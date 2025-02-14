@@ -117,6 +117,9 @@ def make_chart(mc_data, mc_size, mc_mode='line', mc_padding=20, mc_axis_ease=5):
 
     return mc_surface
 
+# To make it easier to pick which letters to use and eliminate bunching or whatever,
+# only include letters within a threshold similar to the average value of the image chunk,
+# regardless of shape
 
 #This section was used to find the dimensions of text boxes, and I was afraid to remove it
 # the slopes increase with a slope of 0.6 (exponential) width
