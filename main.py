@@ -123,25 +123,14 @@ def make_chart(mc_data, mc_size, mc_mode='line', mc_padding=20, mc_axis_ease=5):
 
 #This section was used to find the dimensions of text boxes, and I was afraid to remove it
 # the slopes increase with a slope of 0.6 (exponential) width
-import random
-font_size = 96
-values = []
+font_size = 1
 font_object = pygame.font.Font(FONT_PATH, font_size)
-for trial in range(0, 32):
-    character_list = ''
-    if trial == 0:
-        for character in range(0, 128):
-            text_box = font_object.render(character_list, True, (255, 255, 255))
-            character_list = character_list + ASCII_FULL[random.randrange(0, len(ASCII_FULL), 1)]
-            values.append(text_box.get_width())
-    else:
-        for character in range(0, 128):
-            text_box = font_object.render(character_list, True, (255, 255, 255))
-            character_list = character_list + ASCII_FULL[random.randrange(0, len(ASCII_FULL), 1)]
-            values[character] = values[character] + text_box.get_width()
+text_box = font_object.render(ASCII_FULL, True, (255, 255, 255))
+print(text_box.get_height())
 
-for total in range(0, 128):
-    print(values[total]/32)
+# Font Height = (1.517029827 * font_size) + 1.317054054 rounded
+# Font Width = string_length * ( ( 0.6009955586 * font_size ) + 0.01140334587 ) within 0.1%
+
 
 
 window.blit(make_chart(get_surface_composition(pygame_image), pygame_image.get_size()), (0, 0))
