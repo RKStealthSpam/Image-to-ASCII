@@ -130,7 +130,7 @@ print(text_box.get_height())
 
 # Font Height = (1.517029827 * font_size) + 1.317054054 rounded
 # Font Width = string_length * ( ( 0.6009955586 * font_size ) + 0.01140334587 ) within 0.1%
-
+#
 
 
 window.blit(make_chart(get_surface_composition(pygame_image), pygame_image.get_size()), (0, 0))
